@@ -31,3 +31,64 @@
 // Displays users final score based on time left and adds input box to enter initials
 // Submit button to save initials and score to local storage
 // Then displays the highscores page
+
+const questions = [
+    {
+        question: `What is a variable?`,
+        answer1: `Line of code`,
+        answer2: `A file`,
+        answer3: `Programming language`,
+        answer4: `A label that may contain a value`,
+        correctAnswer: `answer4`
+    },
+    {
+        question: `WHAT is a variable?`,
+        answer1: `Line of code`,
+        answer2: `A file`,
+        answer3: `A label that may contain a value`,
+        answer4: `Programming language`,
+        correctAnswer: `answer3`
+    },
+    {
+        question: `What is a VARIABLE?`,
+        answer1: `A label that may contain a value`,
+        answer2: `Line of code`,
+        answer3: `A file`,
+        answer4: `Programming language`,
+        correctAnswer: `answer1`
+    }
+]
+
+
+function userChose(event) {
+    console.log("Ran")
+    const clickedEl = event.target;
+    if(clickedEl.id===questions[0].correctAnswer) {
+        alert("Correct!")
+    } else {
+        alert("Incorrect")
+    }
+}
+
+document.getElementById(`questions`).addEventListener("click", userChose)
+
+
+function startQuiz () {
+    document.getElementById(`quiz-box`).classList.add(`hidden`);
+    document.getElementById(`quiz-question`).textContent=questions[0].question
+    document.getElementById(`answer1`).textContent=questions[0].answer1
+    document.getElementById(`answer2`).textContent=questions[0].answer2
+    document.getElementById(`answer3`).textContent=questions[0].answer3
+    document.getElementById(`answer4`).textContent=questions[0].answer4
+
+
+    document.getElementById(`quiz-content`).classList.remove(`hidden`);
+}
+
+document.getElementById(`quiz-start`).addEventListener(`click` , startQuiz)
+
+
+// how do I keep track of which question I am on and move to next question - ASK BCS
+// how to display if I am correct or wrong
+// how do I know I am on the last question, to submit initials (another div)
+// how to save initial and time/score to localStorage. How to display scores at any time, which will be another div. Probably want to cap the localStorage to 10 scores

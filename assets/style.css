@@ -32,7 +32,7 @@ p {
 
 /* Main Quiz Area Styles */
 
-.quiz-box {
+#quiz-box {
     width: 35%;
     text-align: center;
 }
@@ -44,7 +44,7 @@ h1 {
 
 /* Start Quiz Button */
 
-.quiz-start {
+#quiz-start {
    background-color: rgba(117, 48, 194, 1);
    color: white;
    padding: 3px 5px;
@@ -53,7 +53,23 @@ h1 {
    font-size: 16px;
 }
 
-.quiz-start:hover {
+#quiz-start:hover {
     background-color: rgba(117, 48, 194, 0.5);
 }
 
+.hidden {
+    display: none;
+}
+
+#questions p {
+    background-color: rgba(117, 48, 194, 1);
+    color: white;
+    cursor: pointer;
+    padding-left: 5px;
+    margin-bottom: 5px;
+}
+
+#questions p:hover {
+    background-color: rgba(117, 48, 194, 0.5);
+    color: white;
+}

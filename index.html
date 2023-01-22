@@ -16,12 +16,23 @@
         </header>
         <main>
             <div class="container">
-                <div class="quiz-box">
+                <div id="quiz-box" class="">
                     <h1>Coding Quiz Challenge</h1>
                     <p>Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will penalize your score/time by ten seconds!</p>
-                    <button class="quiz-start">Start Quiz</button>
+                    <button id="quiz-start">Start Quiz</button>
                 </div>
-            </div>
+                <div id="quiz-content" class="hidden">
+                    <h1 id="quiz-question"></h1>
+                    <div id="questions">
+                        <p id="answer1"></p>
+                        <p id="answer2"></p>
+                        <p id="answer3"></p>
+                        <p id="answer4"></p>
+                    </div>
+                    <hr id="result-divider" class="hidden">
+                    <div id="result"></div>
+                </div>
+            </div> <!--Container-->
 
         
         <script src="./assets/script.js"></script>
