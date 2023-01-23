@@ -32,60 +32,200 @@
 // Submit button to save initials and score to local storage
 // Then displays the highscores page
 
-const questions = [
+// Global Variables
+
+const question = document.getElementById(`quiz-question`);
+const answer1 = document.getElementById(`answer1`);
+const answer2 = document.getElementById(`answer2`);
+const answer3 = document.getElementById(`answer3`);
+const answer4 = document.getElementById(`answer4`);
+const quizContent = document.getElementById(`quiz-content`);
+const answerConfirmDivider = document.getElementById(`result-divider`);
+const answerConfirm = document.getElementById(`result`);
+const initialsPage = document.getElementById(`quiz-finish-page`);
+const highscores = document.getElementById(`highscores`);
+let timer = document.getElementById(`timer`);
+
+// Event Listeners
+
+document.getElementById(`quiz-start`).addEventListener(`click` , startQuiz);
+document.getElementById(`submit-initials`).addEventListener(`click`, submitInitials);
+document.getElementById(`back-to-start`).addEventListener(`click`, startQuiz);
+// TO-DO: and above ^^ does the quiz just start over again or go to the mainpage?
+// document.getElementById(`clear-scores`).addEventListener(`click`); - needs to clear local storage and empty the li element
+
+// Object of Quiz Questions and Answers
+
+let questions = [
     {
         question: `What is a variable?`,
-        answer1: `Line of code`,
-        answer2: `A file`,
-        answer3: `Programming language`,
-        answer4: `A label that may contain a value`,
-        correctAnswer: `answer4`
+        answer1: `1. Line of code`,
+        answer2: `2. A file`,
+        answer3: `3. Programming language`,
+        answer4: `4. A label that may contain a value`,
+        correctAnswer: `4`
     },
     {
         question: `WHAT is a variable?`,
-        answer1: `Line of code`,
-        answer2: `A file`,
-        answer3: `A label that may contain a value`,
-        answer4: `Programming language`,
-        correctAnswer: `answer3`
+        answer1: `1. Line of code`,
+        answer2: `2. A file`,
+        answer3: `3. A label that may contain a value`,
+        answer4: `4. Programming language`,
+        correctAnswer: `3`
     },
     {
         question: `What is a VARIABLE?`,
-        answer1: `A label that may contain a value`,
-        answer2: `Line of code`,
-        answer3: `A file`,
-        answer4: `Programming language`,
-        correctAnswer: `answer1`
+        answer1: `1. A label that may contain a value`,
+        answer2: `2. Line of code`,
+        answer3: `3. A file`,
+        answer4: `4. Programming language`,
+        correctAnswer: `1`
     }
 ]
 
+// Keeping track of the index of the questions
 
-function userChose(event) {
-    console.log("Ran")
-    const clickedEl = event.target;
-    if(clickedEl.id===questions[0].correctAnswer) {
-        alert("Correct!")
-    } else {
-        alert("Incorrect")
-    }
+const lastQuestionIndex = questions.length - 1;
+let runningQuestionIndex = 0;
+
+// Rendering each question on the screen
+
+function renderQuestion () {
+    let q = questions[runningQuestionIndex];
+    question.textContent = q.question;
+    answer1.textContent = q.answer1;
+    answer2.textContent = q.answer2;
+    answer3.textContent = q.answer3;
+    answer4.textContent = q.answer4;
 }
 
-document.getElementById(`questions`).addEventListener("click", userChose)
-
+// Start the quiz, using event listener, hiding Quiz instructions/main page, and showing the questions and answers by calling renderQuestion function
 
 function startQuiz () {
     document.getElementById(`quiz-box`).classList.add(`hidden`);
-    document.getElementById(`quiz-question`).textContent=questions[0].question
-    document.getElementById(`answer1`).textContent=questions[0].answer1
-    document.getElementById(`answer2`).textContent=questions[0].answer2
-    document.getElementById(`answer3`).textContent=questions[0].answer3
-    document.getElementById(`answer4`).textContent=questions[0].answer4
-
-
-    document.getElementById(`quiz-content`).classList.remove(`hidden`);
+    quizContent.classList.remove(`hidden`);
+    renderQuestion ();
 }
 
-document.getElementById(`quiz-start`).addEventListener(`click` , startQuiz)
+// Checks if the answer is correct or incorrect, then renders the next question, so long as there is another question after
+
+function checkAnswer(answer) {
+    if (questions[runningQuestionIndex].correctAnswer == answer) {
+        correctAnswer();
+    } else {
+        wrongAnswer();
+    }
+    if (runningQuestionIndex < lastQuestionIndex) {
+        count = 0;
+        runningQuestionIndex++;
+        renderQuestion ();
+    } else
+    initialsInput()
+};
+
+// Function if the answer is correct
+
+function correctAnswer () {
+    answerConfirmDivider.classList.remove(`hidden`);
+    answerConfirm.textContent = `Correct!`;
+    // TO-DO: need to only display for 2-3 seconds
+}
+
+// Function if the answer is wrong
+
+function wrongAnswer () {
+    answerConfirmDivider.classList.remove(`hidden`);
+    answerConfirm.textContent = `Wrong!`;
+    // TO-DO: need to remove -10 seconds from the timer  
+}
+
+// Initials input box
+
+function initialsInput () {
+    initialsPage.classList.remove(`hidden`);
+    quizContent.classList.add(`hidden`);
+}
+
+// Submit initials to view highscores
+
+function submitInitials () {
+    initialsPage.classList.add(`hidden`);
+    highscores.classList.remove(`hidden`);
+    // TO-DO: need to capture the value that the user inputs in the text field, store score and initials to local storage (setItem)
+}
+
+// TO-DO: need function for pulling from local storage (getItem) and adding that data as an li, appended to child or ul, then style in Javascript
+
+// TO-DO: Timer function to countdown every 1 second from 100
+
+timer = setInterval(1000);
+
+
+
+
+
+
+
+
+
+
+
+// Action when user clicks on any of the answer buttons
+
+// function userChose (event) {
+//     const clickedEl = event.target;
+//     if (clickedEl.id === questions[0].correctAnswer) {
+//         answerConfirmDivider.classList.remove(`hidden`);
+//         answerConfirm.textContent = `Correct!`;
+//         document.getElementById(`quiz-question`).textContent=questions[1].question;
+//         document.getElementById(`answer1`).textContent=questions[1].answer1;
+//         document.getElementById(`answer2`).textContent=questions[1].answer2;
+//         document.getElementById(`answer3`).textContent=questions[1].answer3;
+//         document.getElementById(`answer4`).textContent=questions[1].answer4;
+//     } else {
+//         answerConfirmDivider.classList.remove(`hidden`);
+//         answerConfirm.textContent = `Wrong!`;
+//         document.getElementById(`quiz-question`).textContent=questions[1].question;
+//         document.getElementById(`answer1`).textContent=questions[1].answer1;
+//         document.getElementById(`answer2`).textContent=questions[1].answer2;
+//         document.getElementById(`answer3`).textContent=questions[1].answer3;
+//         document.getElementById(`answer4`).textContent=questions[1].answer4;
+//     }
+// }
+// Action when user clicks the start button
+
+// function startQuiz () {
+//     document.getElementById(`quiz-box`).classList.add(`hidden`);
+//     document.getElementById(`quiz-question`).textContent=questions[0].question;
+//     document.getElementById(`answer1`).textContent=questions[0].answer1;
+//     document.getElementById(`answer2`).textContent=questions[0].answer2;
+//     document.getElementById(`answer3`).textContent=questions[0].answer3;
+//     document.getElementById(`answer4`).textContent=questions[0].answer4;
+
+
+//     document.getElementById(`quiz-content`).classList.remove(`hidden`);
+// };
+
+// function userChose2 (event) {
+//     const clickedEl = event.target;
+//     if (clickedEl.id === questions[1].correctAnswer) {
+//         answerConfirmDivider.classList.remove(`hidden`);
+//         answerConfirm.textContent = `Correct!`;
+//         document.getElementById(`quiz-question`).textContent=questions[2].question;
+//         document.getElementById(`answer1`).textContent=questions[2].answer1;
+//         document.getElementById(`answer2`).textContent=questions[2].answer2;
+//         document.getElementById(`answer3`).textContent=questions[2].answer3;
+//         document.getElementById(`answer4`).textContent=questions[2].answer4;
+//     } else {
+//         answerConfirmDivider.classList.remove(`hidden`);
+//         answerConfirm.textContent = `Wrong!`;
+//         document.getElementById(`quiz-question`).textContent=questions[2].question;
+//         document.getElementById(`answer1`).textContent=questions[2].answer1;
+//         document.getElementById(`answer2`).textContent=questions[2].answer2;
+//         document.getElementById(`answer3`).textContent=questions[2].answer3;
+//         document.getElementById(`answer4`).textContent=questions[2].answer4;
+//     }
+// }
 
 
 // how do I keep track of which question I am on and move to next question - ASK BCS

@@ -12,11 +12,11 @@
     <body>
         <header>
             <p>View Highscores</p>
-            <p>Time: 100</p>
+            <p>Time: <span id="timer">100</span></p>
         </header>
         <main>
             <div class="container">
-                <div id="quiz-box" class="">
+                <div id="quiz-box">
                     <h1>Coding Quiz Challenge</h1>
                     <p>Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will penalize your score/time by ten seconds!</p>
                     <button id="quiz-start">Start Quiz</button>
@@ -24,13 +24,28 @@
                 <div id="quiz-content" class="hidden">
                     <h1 id="quiz-question"></h1>
                     <div id="questions">
-                        <p id="answer1"></p>
-                        <p id="answer2"></p>
-                        <p id="answer3"></p>
-                        <p id="answer4"></p>
+                        <p id="answer1" onclick="checkAnswer(`1`)"></p>
+                        <p id="answer2" onclick="checkAnswer(`2`)"></p>
+                        <p id="answer3" onclick="checkAnswer(`3`)"></p>
+                        <p id="answer4" onclick="checkAnswer(`4`)"></p>
                     </div>
                     <hr id="result-divider" class="hidden">
                     <div id="result"></div>
+                </div>
+                <div id="quiz-finish-page" class="hidden">
+                    <h1>All done!</h1>
+                    <p>Your final score is <span id="final-score">.</span></p>
+                    <div id="initials-input">
+                        <label for="initials">Enter initials: </label>
+                        <input type="text" id="initials" name="name" />
+                        <button id="submit-initials">Submit</button>
+                    </div>
+                </div>
+                <div id="highscores" class="hidden">
+                    <h1>Highscores</h1>
+                    <ul></ul>
+                    <button id="back-to-start">Go Back</button>
+                    <button id="clear-scores">Clear Highscores</button>
                 </div>
             </div> <!--Container-->
 
