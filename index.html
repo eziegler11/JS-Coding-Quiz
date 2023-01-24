@@ -8,11 +8,14 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="./assets/style.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;500&display=swap" rel="stylesheet">
     </head>
     <body>
         <header>
             <p>View Highscores</p>
-            <p>Time: <span id="timer">100</span></p>
+            <p>Timer: <span id="timer">100</span></p>
         </header>
         <main>
             <div class="container">
@@ -35,20 +38,20 @@
                 <div id="quiz-finish-page" class="hidden">
                     <h1>All done!</h1>
                     <p>Your final score is <span id="final-score">.</span></p>
-                    <div id="initials-input">
+                    <div id="initials-page">
                         <label for="initials">Enter initials: </label>
-                        <input type="text" id="initials" name="name" />
+                        <input type="text" id="initials-input" name="name" />
                         <button id="submit-initials">Submit</button>
                     </div>
                 </div>
                 <div id="highscores" class="hidden">
                     <h1>Highscores</h1>
-                    <ul></ul>
+                    <ul id="highscores-list"></ul>
                     <button id="back-to-start">Go Back</button>
                     <button id="clear-scores">Clear Highscores</button>
                 </div>
             </div> <!--Container-->
-
+        </main>
         
         <script src="./assets/script.js"></script>
     </body>

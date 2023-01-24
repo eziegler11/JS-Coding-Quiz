@@ -43,14 +43,20 @@ const quizContent = document.getElementById(`quiz-content`);
 const answerConfirmDivider = document.getElementById(`result-divider`);
 const answerConfirm = document.getElementById(`result`);
 const initialsPage = document.getElementById(`quiz-finish-page`);
+const initialsInput = document.getElementById(`initials-input`);
 const highscores = document.getElementById(`highscores`);
+let finalScores = document.getElementById(`highscores-list`);
+let userScore = document.getElementById(`final-score`);
 let timer = document.getElementById(`timer`);
+let countdown = 100;
+let initials = [];
+let timerInterval;
 
 // Event Listeners
 
 document.getElementById(`quiz-start`).addEventListener(`click` , startQuiz);
 document.getElementById(`submit-initials`).addEventListener(`click`, submitInitials);
-document.getElementById(`back-to-start`).addEventListener(`click`, startQuiz);
+// document.getElementById(`back-to-start`).addEventListener(`click`, toBeginning);
 // TO-DO: and above ^^ does the quiz just start over again or go to the mainpage?
 // document.getElementById(`clear-scores`).addEventListener(`click`); - needs to clear local storage and empty the li element
 
@@ -99,15 +105,28 @@ function renderQuestion () {
     answer4.textContent = q.answer4;
 }
 
-// Start the quiz, using event listener, hiding Quiz instructions/main page, and showing the questions and answers by calling renderQuestion function
+// Quiz Timer
+
+function startTime () {
+    timerInterval = setInterval (function() {
+        countdown--;
+        timer.textContent = countdown + ` second(s) left.`;
+        if (countdown <= 0) {
+            initialsInputPage()
+        }
+    },1000);
+}
+
+// Start the quiz & timer, using event listener, hiding Quiz instructions/main page, and showing the questions and answers by calling renderQuestion function
 
 function startQuiz () {
     document.getElementById(`quiz-box`).classList.add(`hidden`);
     quizContent.classList.remove(`hidden`);
     renderQuestion ();
+    startTime ();
 }
 
-// Checks if the answer is correct or incorrect, then renders the next question, so long as there is another question after
+// Checks if the answer is correct or incorrect, then renders the next question, so long as there is another question after, otherwise goes to initials input page & stops timer
 
 function checkAnswer(answer) {
     if (questions[runningQuestionIndex].correctAnswer == answer) {
@@ -120,7 +139,7 @@ function checkAnswer(answer) {
         runningQuestionIndex++;
         renderQuestion ();
     } else
-    initialsInput()
+    initialsInputPage()
 };
 
 // Function if the answer is correct
@@ -136,14 +155,15 @@ function correctAnswer () {
 function wrongAnswer () {
     answerConfirmDivider.classList.remove(`hidden`);
     answerConfirm.textContent = `Wrong!`;
-    // TO-DO: need to remove -10 seconds from the timer  
+    countdown = countdown - 10;
 }
 
 // Initials input box
 
-function initialsInput () {
+function initialsInputPage () {
     initialsPage.classList.remove(`hidden`);
     quizContent.classList.add(`hidden`);
+    clearInterval(timerInterval);
 }
 
 // Submit initials to view highscores
@@ -151,84 +171,57 @@ function initialsInput () {
 function submitInitials () {
     initialsPage.classList.add(`hidden`);
     highscores.classList.remove(`hidden`);
-    // TO-DO: need to capture the value that the user inputs in the text field, store score and initials to local storage (setItem)
 }
 
-// TO-DO: need function for pulling from local storage (getItem) and adding that data as an li, appended to child or ul, then style in Javascript
+// Inputting, storing and rendering highscores
+// Getting the stored initials and then rendering to the page through a function
 
-// TO-DO: Timer function to countdown every 1 second from 100
+function init () {
+    var storedInitials = JSON.parse(localStorage.getItem(`intials`));
+    if (storedInitials !== null) {
+        initials = storedInitials;
+    }
+    renderHighscores();
+}
 
-timer = setInterval(1000);
+// Turning initials array into strings
 
+function storeInitials () {
+    localStorage.setItem(`initials`, JSON.stringify(initials));
+}
 
+// Captures user input when submit button is clicked, stores in local storage, then renders to highscores page
 
+document.getElementById(`submit-initials`).addEventListener(`click`, function(event) {
+    event.preventDefault();
+    var initialsText = initialsInput.value.trim();
+    if (initialsText === "") {
+        return;
+    }
+    initials.push(initialsText);
+    initialsInput.value = "";
+    storeInitials ();
+    renderHighscores();
+});
 
+// Render initials and high score to highscores page
 
+function renderHighscores () {
+    finalScores.innerHTML = "";
+    for (let index = 0; index < initials.length; index++) {
+        const initial = initials[index];
+        
+        var li = document.createElement(`li`);
+        li.textContent = initial;
+        li.setAttribute(`data-index`, index);
 
+        finalScores.appendChild(li);
+    }
+}
 
+init();
 
-
-
-
-// Action when user clicks on any of the answer buttons
-
-// function userChose (event) {
-//     const clickedEl = event.target;
-//     if (clickedEl.id === questions[0].correctAnswer) {
-//         answerConfirmDivider.classList.remove(`hidden`);
-//         answerConfirm.textContent = `Correct!`;
-//         document.getElementById(`quiz-question`).textContent=questions[1].question;
-//         document.getElementById(`answer1`).textContent=questions[1].answer1;
-//         document.getElementById(`answer2`).textContent=questions[1].answer2;
-//         document.getElementById(`answer3`).textContent=questions[1].answer3;
-//         document.getElementById(`answer4`).textContent=questions[1].answer4;
-//     } else {
-//         answerConfirmDivider.classList.remove(`hidden`);
-//         answerConfirm.textContent = `Wrong!`;
-//         document.getElementById(`quiz-question`).textContent=questions[1].question;
-//         document.getElementById(`answer1`).textContent=questions[1].answer1;
-//         document.getElementById(`answer2`).textContent=questions[1].answer2;
-//         document.getElementById(`answer3`).textContent=questions[1].answer3;
-//         document.getElementById(`answer4`).textContent=questions[1].answer4;
-//     }
-// }
-// Action when user clicks the start button
-
-// function startQuiz () {
-//     document.getElementById(`quiz-box`).classList.add(`hidden`);
-//     document.getElementById(`quiz-question`).textContent=questions[0].question;
-//     document.getElementById(`answer1`).textContent=questions[0].answer1;
-//     document.getElementById(`answer2`).textContent=questions[0].answer2;
-//     document.getElementById(`answer3`).textContent=questions[0].answer3;
-//     document.getElementById(`answer4`).textContent=questions[0].answer4;
-
-
-//     document.getElementById(`quiz-content`).classList.remove(`hidden`);
+// function toBeginning () {
+//     document.getElemenyById(`quiz-finish-page`).classList.add(`hidden`);
+//     document.getElemenyById(`highscores`).classList.add(`hidden`);
 // };
-
-// function userChose2 (event) {
-//     const clickedEl = event.target;
-//     if (clickedEl.id === questions[1].correctAnswer) {
-//         answerConfirmDivider.classList.remove(`hidden`);
-//         answerConfirm.textContent = `Correct!`;
-//         document.getElementById(`quiz-question`).textContent=questions[2].question;
-//         document.getElementById(`answer1`).textContent=questions[2].answer1;
-//         document.getElementById(`answer2`).textContent=questions[2].answer2;
-//         document.getElementById(`answer3`).textContent=questions[2].answer3;
-//         document.getElementById(`answer4`).textContent=questions[2].answer4;
-//     } else {
-//         answerConfirmDivider.classList.remove(`hidden`);
-//         answerConfirm.textContent = `Wrong!`;
-//         document.getElementById(`quiz-question`).textContent=questions[2].question;
-//         document.getElementById(`answer1`).textContent=questions[2].answer1;
-//         document.getElementById(`answer2`).textContent=questions[2].answer2;
-//         document.getElementById(`answer3`).textContent=questions[2].answer3;
-//         document.getElementById(`answer4`).textContent=questions[2].answer4;
-//     }
-// }
-
-
-// how do I keep track of which question I am on and move to next question - ASK BCS
-// how to display if I am correct or wrong
-// how do I know I am on the last question, to submit initials (another div)
-// how to save initial and time/score to localStorage. How to display scores at any time, which will be another div. Probably want to cap the localStorage to 10 scores
