@@ -1,37 +1,3 @@
-// Acceptance Criteria
-
-// GIVEN I am taking a code quiz
-// WHEN I click the start button
-// THEN a timer starts and I am presented with a question
-// WHEN I answer a question
-// THEN I am presented with another question
-// WHEN I answer a question incorrectly
-// THEN time is subtracted from the clock
-// WHEN all questions are answered or the timer reaches 0
-// THEN the game is over
-// WHEN the game is over
-// THEN I can save my initials and my score
-
-// Landing Page - View Highscores & Timer, CSS: flex, space-between
-// H1 Coding Quiz Challenge
-// P with text
-// Button to start quiz
-// DIV wrapping the above minus "nav bar / header"
-
-// Starting the quiz - timer starts
-// Store quiz questions and answers in an object, plus which is correct answer
-// Each answer is a button
-// Event listener for each answer button
-// When user clicks on an answer button
-// If answer is correct, put "Correct!" below the answer buttons
-// If answer is incorrect, put "Wrong!" below the answer buttons, subtract 10 seconds from the timer
-
-// Once through all questions or timer reaches 0, game is over
-// Once through all questions and timer still has time, the game ends and that is users score
-// Displays users final score based on time left and adds input box to enter initials
-// Submit button to save initials and score to local storage
-// Then displays the highscores page
-
 // Global Variables
 
 const question = document.getElementById(`quiz-question`);
@@ -50,15 +16,14 @@ let userScore = document.getElementById(`final-score`);
 let timer = document.getElementById(`timer`);
 let countdown = 100;
 let initials = [];
+let userHighscore = [];
 let timerInterval;
+
 
 // Event Listeners
 
 document.getElementById(`quiz-start`).addEventListener(`click` , startQuiz);
 document.getElementById(`submit-initials`).addEventListener(`click`, submitInitials);
-// document.getElementById(`back-to-start`).addEventListener(`click`, toBeginning);
-// TO-DO: and above ^^ does the quiz just start over again or go to the mainpage?
-// document.getElementById(`clear-scores`).addEventListener(`click`); - needs to clear local storage and empty the li element
 
 // Object of Quiz Questions and Answers
 
@@ -72,19 +37,19 @@ let questions = [
         correctAnswer: `4`
     },
     {
-        question: `WHAT is a variable?`,
-        answer1: `1. Line of code`,
-        answer2: `2. A file`,
-        answer3: `3. A label that may contain a value`,
-        answer4: `4. Programming language`,
-        correctAnswer: `3`
+        question: `What does CSS stand for?`,
+        answer1: `1. Country Style Seasonings`,
+        answer2: `2. Cascading Style Sheets`,
+        answer3: `3. Corner Stone Styling`,
+        answer4: `4. Color Style Sheets`,
+        correctAnswer: `2`
     },
     {
-        question: `What is a VARIABLE?`,
-        answer1: `1. A label that may contain a value`,
-        answer2: `2. Line of code`,
-        answer3: `3. A file`,
-        answer4: `4. Programming language`,
+        question: `What does a function in JavaScript do?`,
+        answer1: `1. Logs a statement into the console`,
+        answer2: `2. Runs code`,
+        answer3: `3. Saves a file`,
+        answer4: `4. Performs a task`,
         correctAnswer: `1`
     }
 ]
@@ -122,8 +87,8 @@ function startTime () {
 function startQuiz () {
     document.getElementById(`quiz-box`).classList.add(`hidden`);
     quizContent.classList.remove(`hidden`);
-    renderQuestion ();
     startTime ();
+    renderQuestion ();
 }
 
 // Checks if the answer is correct or incorrect, then renders the next question, so long as there is another question after, otherwise goes to initials input page & stops timer
@@ -147,7 +112,6 @@ function checkAnswer(answer) {
 function correctAnswer () {
     answerConfirmDivider.classList.remove(`hidden`);
     answerConfirm.textContent = `Correct!`;
-    // TO-DO: need to only display for 2-3 seconds
 }
 
 // Function if the answer is wrong
@@ -160,9 +124,12 @@ function wrongAnswer () {
 
 // Initials input box
 
+
 function initialsInputPage () {
     initialsPage.classList.remove(`hidden`);
     quizContent.classList.add(`hidden`);
+    userScore.innerHTML = "";
+    userScore.textContent = countdown + "!";
     clearInterval(timerInterval);
 }
 
@@ -180,6 +147,9 @@ function init () {
     var storedInitials = JSON.parse(localStorage.getItem(`intials`));
     if (storedInitials !== null) {
         initials = storedInitials;
+    } var displayScore = JSON.parse(localStorage.getItem(`userHighscore`));
+    if (displayScore !== null) {
+        userHighscore = displayScore;
     }
     renderHighscores();
 }
@@ -187,7 +157,9 @@ function init () {
 // Turning initials array into strings
 
 function storeInitials () {
+    userHighscore.push(countdown);
     localStorage.setItem(`initials`, JSON.stringify(initials));
+    localStorage.setItem(`userHighscore`, JSON.stringify(userHighscore));
 }
 
 // Captures user input when submit button is clicked, stores in local storage, then renders to highscores page
@@ -209,7 +181,7 @@ document.getElementById(`submit-initials`).addEventListener(`click`, function(ev
 function renderHighscores () {
     finalScores.innerHTML = "";
     for (let index = 0; index < initials.length; index++) {
-        const initial = initials[index];
+        const initial = initials[index] + `: ` + userHighscore[index];
         
         var li = document.createElement(`li`);
         li.textContent = initial;
@@ -221,7 +193,31 @@ function renderHighscores () {
 
 init();
 
-// function toBeginning () {
-//     document.getElemenyById(`quiz-finish-page`).classList.add(`hidden`);
-//     document.getElemenyById(`highscores`).classList.add(`hidden`);
-// };
+// Show highscores page through link
+
+function showHighscores () {
+    highscores.classList.remove(`hidden`);
+    document.getElementById(`quiz-box`).classList.add(`hidden`);
+}
+
+document.getElementById(`highscores-link`).addEventListener(`click`, showHighscores);
+
+// Go back to start, button
+
+document.getElementById(`back-to-start`).addEventListener(`click`, backToStart);
+
+function backToStart () {
+    document.getElementById(`quiz-box`).classList.remove(`hidden`);
+    highscores.classList.add(`hidden`);
+    return;
+}
+
+// Clear highscore button
+
+document.getElementById(`clear-scores`).addEventListener(`click`, clearScores);
+
+function clearScores () {
+    localStorage.clear();
+    while (finalScores.firstChild) {
+        finalScores.removeChild(finalScores.firstChild);
+}}
